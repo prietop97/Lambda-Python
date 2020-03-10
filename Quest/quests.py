@@ -53,46 +53,65 @@ quests = [
 ]
 
 
-
-def getBestQuePath(arr):
-
-    # node = {
-    #   'max_reward': 0,
-    #   'most_profitable_quests': [],
-    #   ''
-    # }
-    ## SET IT UP
+## Creates a hashmap with day nodes -- Can be reused for other games or used in February or months that have 30 days
+def create_quests_calendar(days_in_the_month, quests_arr):
     days = []
-    for i in range(32): #0(1)
-        days.append([0, [], []])
+    for i in range(days_in_the_month):
+        days.append(
+            {
+                "max_profit": 0,
+                "most_profitable_quests": [],
+                "quests_ending_this_day": [],
+            }
+        )
 
-    for quest in arr: #0(N)
+    for quest in quests_arr:
         end_date = quest.end_date
-        days[end_date - 1][2].append(quest)
+        days[end_date - 1]["quests_ending_this_day"].append(quest)
 
-    for i in range(len(days)):
-        # print(f'before: day{i+1}: {days[i]}')
-        for quest in days[i][2]:
-
-            if days[i][0] == quest.reward + days[quest.start_date - 1][0]:
-                print("")
-                print(quest.reward + days[quest.start_date - 1][0])
-                print("Hello i'm running")
-
-            if days[i][0] < quest.reward + days[quest.start_date - 1][0]:
-                days[i][0] = quest.reward + days[quest.start_date - 1][0]
-
-                ### GET THE IDS
-                days[i][1] = days[quest.start_date - 1][1][:]
-                days[i][1].append(quest.name)
-              
-
-        ### IF THIS IS NOT A GOOD DAY, DEFAULT TO THE LAST DAY
-        if i != 0 and days[i][0] <= days[i - 1][0]:
-            days[i] = days[i - 1]
-
-        # print(f'after: day{i+1}: {days[i]}')
-    return days[-1]
+    return days
 
 
-print(getBestPath(quests))
+def get_max_reward_quest_list(quests_arr):
+    calendar = create_quests_calendar(31, quests_arr)
+
+    for i in range(1, len(calendar)):
+        current_day_node = calendar[i]
+
+        ## LOOPING THROUGH ALL THE QUESTS THAT ENDS ON THE CURRENT DATE
+        for quest in current_day_node["quests_ending_this_day"]:
+            quest_start_node = calendar[quest.start_date - 1]
+
+            ## EDGE CASE, DOES NOT AFFECT ANSWER BUT CAN HELP BY GIVING LINK DIFFERENT OPTIONS WHILE GETTING THE SAME AMMOUNT RUPEES
+            if (
+                current_day_node["max_profit"]
+                == quest.reward + quest_start_node["max_profit"]
+            ):
+                print("TODO")
+
+            ## EDGE CASE, DOES NOT AFFECT ANSWER BUT CAN HELP BY GIVING LINK DIFFERENT OPTIONS WHILE GETTING THE SAME AMMOUNT RUPEES
+            if (
+                current_day_node["max_profit"]
+                < quest.reward + quest_start_node["max_profit"]
+            ):
+                current_day_node["max_profit"] = (
+                    quest.reward + quest_start_node["max_profit"]
+                )
+
+                ### GET THE MOST PROFITABLE QUESTS FOR EASY REACH
+                current_day_node["most_profitable_quests"] = quest_start_node[
+                    "most_profitable_quests"
+                ][:]
+                current_day_node["most_profitable_quests"].append(quest.name)
+
+        ### IF YESTERDAY HAD A BETTER OUTCOME THAT TODAY THERE IS NO REASON TO KEEP TODAY STATS
+        day_before_node = calendar[i - 1]
+        if current_day_node["max_profit"] <= day_before_node["max_profit"]:
+            calendar[i] = day_before_node
+
+
+    ## RETURNING THE LAST DAY WHICH SHOULD HAVE EVERYTHING WE NEED
+    return f"{calendar[i]['max_profit']} rupees by completing this quests: {calendar[i]['most_profitable_quests']}"
+
+
+print(get_max_reward_quest_list(quests))
