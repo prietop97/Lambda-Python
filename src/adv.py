@@ -46,53 +46,61 @@ room["treasure"].s_to = room["narrow"]
 # Main
 #
 
-# player1 = Player(room['outside'])
-directions = {"N": "n_to", "S": "s_to", "E": "e_to", "W": "w_to"}
-
-
-def validate_if_node_exist(room, input_direction):
-    return hasattr(room, directions[input_direction])
-
-
-def change_player_position(player, input_direction):
-    next_room = getattr(player.position, directions[input_direction])
-    player.position = next_room
-    return True
-
 
 def print_colored_text(text, bcolor):
     return f"{bcolor} {text} {Bcolors.ENDC}"
 
-
 def print_dots():
     return "..................................................."
 
+def create_player():
+    while(True):
+        try:
+            user_name = input(print_colored_text("Hey! What is your name? :", Bcolors.OKBLUE))
+            player = Player(user_name, room["outside"])
+        except Exception as err:
+            print(print_colored_text(err, Bcolors.FAIL))
+        else:
+            return player
 
-user_name = input(print_colored_text("Hey! What is your name? :", Bcolors.OKBLUE))
-player = Player(user_name, room["outside"])
+def play_game(player):
+    '''
+    Depends on a player, colors for the console and the dot method
+    '''
+    while True:
+        print(
+            print_colored_text(
+                f"You are currently in the {player.position.name}", Bcolors.WARNING
+            )
+        )
+        print(print_colored_text(f"{player.position.description}", Bcolors.WARNING))
+        print(print_dots())
+        next_step = input(
+            print_colored_text(
+                "Where would you like to go next? (N,S,E,W):", Bcolors.OKBLUE
+            )
+        )
+        print(print_dots())
+        try:
+            next_room = player.position.check_path(next_step)
+            player.position = next_room
+        except KeyError as err:
+            print(print_colored_text("Enter a valid path, N,S,E,W.", Bcolors.FAIL))
+            print(print_dots())
+        except AttributeError as err:
+            print(print_colored_text("Looks like a dead end, pay close attention to the clues!", Bcolors.FAIL))
+            print(print_dots())
 
+
+
+player = create_player()
 print(print_dots())
 print(print_colored_text(f"Welcome {player.name}", Bcolors.WARNING))
 
-while True:
-    print(
-        print_colored_text(
-            f"You are currently in the {player.position.name}", Bcolors.WARNING
-        )
-    )
-    print(print_colored_text(f"{player.position.description}", Bcolors.WARNING))
-    print(print_dots())
-    next_step = input(
-        print_colored_text(
-            "Where would you like to go next? (N,S,E,W):", Bcolors.OKBLUE
-        )
-    )
-    print(print_dots())
-    if validate_if_node_exist(player.position, next_step):
-        change_player_position(player, next_step)
-    else:
-        print(print_colored_text("Looks like a dead end, pay close attention to the clues!", Bcolors.FAIL))
-        print(print_dots())
+play_game(player)
+
+
+
 
 
 # Make a new player object that is currently in the 'outside' room.
