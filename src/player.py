@@ -1,29 +1,17 @@
 # Write a class to hold player information, e.g. what room they are in
 # currently.
 
-
 class Player:
-    def __init__(self,name,position):
+    def __init__(self, name, current_room):
         self.name = name
-        self.position = position
+        self.current_room = current_room
+
+    def display_current_room(self):
+        print(f"You are currently in the {self.current_room.name}")
+        print(f"{self.current_room.description}")
     
-    @property
-    def name(self):
-        return self._name
+                
+    def welcome_player(self):
+        print(f"Welcome {self.name}")
 
-    @property
-    def position(self):
-        return self._position
 
-    @name.setter
-    def name(self,name):
-        if len(name) < 1:
-            raise Exception("Provide a valid name")
-        self._name = name
-
-    @position.setter
-    def position(self,position):
-        self._position = position
-
-    
-    

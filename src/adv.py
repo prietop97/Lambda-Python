@@ -1,10 +1,10 @@
 from room import Room
 from player import Player
-from colors import Bcolors
+from item import Item
+from myinput import Input
 
-# Declare all the rooms
 
-room = {
+rooms = {
     "outside": Room("Outside Cave Entrance", "North of you, the cave mount beckons"),
     "foyer": Room(
         "Foyer",
@@ -30,88 +30,67 @@ earlier adventurers. The only exit is to the south.""",
     ),
 }
 
+# items = {
+#     "water": ,
+#     "soda": ,
+#     "gun": ,
+#     "radio": ,
+
+# }
+
+# rooms["outside"].add_items("water", "soda")
+# rooms["foyer"].add_items("gun", "radio")
+# rooms["overlook"].add_items("sword", "soda")
+# rooms["narrow"].add_items("water")
+# rooms["treasure"].add_items("shovel", "rope")
+
 
 # Link rooms together
 
-room["outside"].n_to = room["foyer"]
-room["foyer"].s_to = room["outside"]
-room["foyer"].n_to = room["overlook"]
-room["foyer"].e_to = room["narrow"]
-room["overlook"].s_to = room["foyer"]
-room["narrow"].w_to = room["foyer"]
-room["narrow"].n_to = room["treasure"]
-room["treasure"].s_to = room["narrow"]
+rooms["outside"].n_to = rooms["foyer"]
+rooms["foyer"].s_to = rooms["outside"]
+rooms["foyer"].n_to = rooms["overlook"]
+rooms["foyer"].e_to = rooms["narrow"]
+rooms["overlook"].s_to = rooms["foyer"]
+rooms["narrow"].w_to = rooms["foyer"]
+rooms["narrow"].n_to = rooms["treasure"]
+rooms["treasure"].s_to = rooms["narrow"]
 
-#
-# Main
-#
-
-
-def print_colored_text(text, bcolor):
-    return f"{bcolor} {text} {Bcolors.ENDC}"
-
-def print_dots():
-    return "..................................................."
-
-def create_player():
-    while(True):
-        try:
-            user_name = input(print_colored_text("Hey! What is your name? :", Bcolors.OKBLUE))
-            player = Player(user_name, room["outside"])
-        except Exception as err:
-            print(print_colored_text(err, Bcolors.FAIL))
-        else:
-            return player
-
-def play_game(player):
-    '''
-    Depends on a player, colors for the console and the dot method
-    '''
+# adventure_player = AdventureGame.create_player()
+# AdventureGame(adventure_player)
+def get_name():
     while True:
-        print(
-            print_colored_text(
-                f"You are currently in the {player.position.name}", Bcolors.WARNING
-            )
-        )
-        print(print_colored_text(f"{player.position.description}", Bcolors.WARNING))
-        print(print_dots())
-        next_step = input(
-            print_colored_text(
-                "Where would you like to go next? (N,S,E,W):", Bcolors.OKBLUE
-            )
-        )
-        print(print_dots())
-        try:
-            next_room = player.position.check_path(next_step)
-            player.position = next_room
-        except KeyError as err:
-            print(print_colored_text("Enter a valid path, N,S,E,W.", Bcolors.FAIL))
-            print(print_dots())
-        except AttributeError as err:
-            print(print_colored_text("Looks like a dead end, pay close attention to the clues!", Bcolors.FAIL))
-            print(print_dots())
+        name_input = Input("Hey, what's your name?","Please enter a valid name")
+        player_name = name_input.run()
+        is_valid_name = name_input.check_input(player_name)
+        if not(is_valid_name):
+            print(name_input.error)
+            continue
+        return player_name
+
+def get_next_move():
+    while True:
+        move_input = Input("Hey, where would you like to go next (n,s,e,w?","Not a valid input, try again!",'n','s','w','e')
+        next_move = move_input.run()
+        is_valid_move = move_input.check_input(next_move)
+        if not(is_valid_move):
+            print(move_input.error)
+            continue
+        return next_move
+
+def main():
+    ## WELCOMING THE PLAYER
+    name = get_name()
+    player = Player(name,rooms['outside'])
+    player.welcome_player()
+
+    ## ASKING FOR THE NEXT MOVE
+    while True:
+        player.display_current_room()
+        next_move = get_next_move()
+        room = player.current_room.traverse_room(next_move)
+        player.current_room = room
 
 
+main()
 
-player = create_player()
-print(print_dots())
-print(print_colored_text(f"Welcome {player.name}", Bcolors.WARNING))
-
-play_game(player)
-
-
-
-
-
-# Make a new player object that is currently in the 'outside' room.
-
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
