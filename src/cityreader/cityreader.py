@@ -7,11 +7,9 @@ class City:
     self.lat = lat
     self.lon = lon
 
-  # def __str__(self):
-  #   return f"Name: {self.name}, Lat: {self.lat}, Lon: {self.lon}"
+  def __str__(self):
+    return f"Name: {self.name}, Lat: {self.lat}, Lon: {self.lon}"
 
-  # def __repr__(self):
-  #   return (self.name,self.lat,self.lon)
 
 
 # We have a collection of US cities with population over 750,000 stored in the
@@ -83,12 +81,23 @@ for c in cities:
 
 # TODO Get latitude and longitude values from the user
 
-def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
-  # within will hold the cities that fall within the specified region
-  within = []
+(lat1,lon1) = input("First coordinate -> ").split()
+(lat2,lon2) = input("Second coordinate -> ").split()
 
-  # TODO Ensure that the lat and lon valuse are all floats
-  # Go through each city and check to see if it falls within 
-  # the specified coordinates.
+def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
+  min_x = min(float(lat1),float(lat2))
+  max_x = max(float(lat1),float(lat2))
+  min_y = min(float(lon1),float(lon2))
+  max_y = max(float(lon1),float(lon2))
+
+  within = []
+  for city in cities:
+    # Can not use range with floats
+    # if city.lat in range(float(lat1),float(lat2)) and city.lon in tange(float(lon1),float(lon2)):
+    #   within.append(cities)
+    if city.lat > min_x and city.lat < max_x and city.lon > min_y and city.lon < max_y:
+      within.append(city)
 
   return within
+
+cityreader_stretch(lat1,lon1,lat2,lon2,cities)
