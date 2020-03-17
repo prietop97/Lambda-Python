@@ -52,12 +52,22 @@ print(merge_sort([3,2,3,5,1,5,3,1,6,2233,532,235,5,34,12,21442,7]))
 def merge_in_place(arr, start, mid, end):
     # TO-DO
 
-    return arr
-
-def merge_sort_in_place(arr, l, r): 
-    # TO-DO
 
     return arr
+
+# def merge_sort_in_place(arr, l, r): 
+#     # TO-DO
+#     if l == r:
+#         return arr[l]
+
+#     m = (r - l) - 1 // 2
+
+    
+
+#     return merge_sort_in_place(arr,l,r)
+
+# print(merge_sort_in_place([1,2,3,5,3],0,4))
+
 
 
 # STRETCH: implement the Timsort function below
@@ -68,4 +78,4 @@ def timsort( arr ):
 
     return arr
 
-print(timsort([1,2,3,2,3,5,7,2,52,2,4,5,6,8]))
+#print(timsort([1,2,3,2,3,5,7,2,52,2,4,5,6,8]))

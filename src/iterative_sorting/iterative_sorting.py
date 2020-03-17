@@ -44,7 +44,7 @@ def bubble_sort( arr ):
 
     return arr
 
-print(bubble_sort([random.randint(0,22) for _ in range(30)]))
+#print(bubble_sort([random.randint(0,22) for _ in range(30)]))
 
 
 
@@ -55,11 +55,11 @@ def count_sort( arr, maximum=-1 ): #arr len = N
     if not arr:
         return []
 
-    my_arr = [0] * (max(arr) + 1)
+    my_arr = [0] * (max(arr) + 1) #o(k)
 
     ## Increment the value in my_arr at the index of the value of arr[i]
     ## It counts how many times the number occurs
-    for i in range(len(arr)):
+    for i in range(len(arr)):  #o(n)
         if arr[i] < 0:
             return "Error, negative numbers not allowed in Count Sort"
         my_arr[arr[i]] += 1
@@ -91,7 +91,6 @@ def count_sort( arr, maximum=-1 ): #arr len = N
     #### WITHOUT CREATING A NEW ARR 
     ## SPACE COMPLEXITY OF (k) k = range
     ## TIME COMPLEXITY OF ?? (k * ?) (k + n?)
-    print(my_arr)
     j = 0
     for k in range(len(my_arr)):
         for _ in range(my_arr[k]):
