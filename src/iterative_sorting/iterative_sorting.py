@@ -24,34 +24,44 @@ def selection_sort( arr ):
 # TO-DO:  implement the Bubble Sort function below
 def bubble_sort( arr ):
     sorted_index = len(arr) - 1
+    swapped_index = None
     while sorted_index > 0:
-
+        swapped_index = False
         for i in range(sorted_index):
-
             if(arr[i] > arr[i + 1]):
                 temp = arr[i + 1]
                 arr[i+1] = arr[i]
                 arr[i] = temp
-            
-        sorted_index -= 1
+                swapped_index = True
+        if not swapped_index:
+            break
+        else:
+            sorted_index -= 1
+
+
 
 
 
     return arr
 
-#print(selection_sort([random.randint(0,22) for _ in range(30)]))
+print(bubble_sort([random.randint(0,22) for _ in range(30)]))
 
 
 
 
 # STRETCH: implement the Count Sort function below
-def count_sort( arr, maximum=-1 ): #arr len = N  K
+def count_sort( arr, maximum=-1 ): #arr len = N  
     ## An array of the length of the range of the incoming arr
-    my_arr = [0] * (maximum + 1)
+    if not arr:
+        return []
+
+    my_arr = [0] * (max(arr) + 1)
 
     ## Increment the value in my_arr at the index of the value of arr[i]
     ## It counts how many times the number occurs
     for i in range(len(arr)):
+        if arr[i] < 0:
+            return "Error, negative numbers not allowed in Count Sort"
         my_arr[arr[i]] += 1
 
 
@@ -81,7 +91,7 @@ def count_sort( arr, maximum=-1 ): #arr len = N  K
     #### WITHOUT CREATING A NEW ARR 
     ## SPACE COMPLEXITY OF (k) k = range
     ## TIME COMPLEXITY OF ?? (k * ?) (k + n?)
-
+    print(my_arr)
     j = 0
     for k in range(len(my_arr)):
         for _ in range(my_arr[k]):
