@@ -9,17 +9,17 @@ def merge( arrA, arrB ):
 
 
     for i in range(elements):
-        current_a = float('inf')
-        current_b = float('inf')
-        if a in range(len(arrA)):
-            current_a = arrA[a]
-        if b in range(len(arrB)):
-            current_b = arrB[b]
-        if current_a <= current_b:
-            merged_arr[i] = current_a
+        if a not in range(len(arrA)):
+            merged_arr[i] = arrB[b]
+            b += 1
+        elif b not in range(len(arrB)):
+            merged_arr[i] = arrA[a]
             a += 1
-        elif current_b <= current_a:
-            merged_arr[i] = current_b
+        elif arrA[a] <= arrB[b]:
+            merged_arr[i] = arrA[a]
+            a += 1
+        elif arrA[a] > arrB[b]:
+            merged_arr[i] = arrB[b]
             b += 1
 
     return merged_arr
