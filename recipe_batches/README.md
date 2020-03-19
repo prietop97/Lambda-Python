@@ -25,6 +25,9 @@ recipe_batches(
 )
 ```
 
+loop through available and for each key check the max ammount that you can create using that ingridient, have that in a variable, and update as necessary
+return variable
+
 ## Testing 
 
 Run the test file by executing `python test_recipe_batches.py`.
