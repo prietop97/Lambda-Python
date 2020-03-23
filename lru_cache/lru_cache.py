@@ -29,9 +29,8 @@ class LRUCache:
             return None
         
         node = self.cache[key]
-        new_node = self.storage.move_to_end(node)
-        self.cache[key] = new_node
-        return new_node.value[1]
+        self.storage.move_to_end(node)
+        return node.value[1]
 
 
 
@@ -48,18 +47,16 @@ class LRUCache:
     def set(self, key, value):
         if key in self.cache:
             node = self.cache[key]
-            new_node = self.storage.move_to_end(node)
-            new_node.value = [key,value]
-            self.cache[key] = new_node
+            self.storage.move_to_end(node)
+            node.value = [key,value]
         else:
-            
             if self.limit == self.length:
                 key_value = self.storage.remove_from_head()
                 del self.cache[key_value[0]]
             
             self.length += 1
-            node = self.storage.add_to_tail([key,value])
-            self.cache[key] = node
+            self.storage.add_to_tail([key,value])
+            self.cache[key] = self.storage.tail
             
 
 
