@@ -13,21 +13,20 @@ class BinarySearchTree:
 
     # Insert the given value into the tree
     def insert(self, value):
-        node = BinarySearchTree(value)
         current = self
-        prev = self
+        node = BinarySearchTree(value)
+
         while current:
-            prev = current
-            if value < current.value:
+            if current.value > value and current.left:
                 current = current.left
-            elif value >= current.value:
+            elif current.value > value and current.left is None:
+                current.left = node
+                break
+            elif current.value <= value and current.right:
                 current = current.right
-            
-        
-        if prev.value > value:
-            prev.left = node
-        elif prev.value <= value:
-            prev.right = node
+            elif current.value <= value and current.right is None:
+                current.right = node
+                break
         
 
 
