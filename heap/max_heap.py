@@ -34,7 +34,7 @@ class Heap:
                 return
 
             index = parent
-            return bubble_rec(index,(index - 2) // 2)
+            return bubble_rec(index,(index - 1) // 2)
 
         bubble_rec(index,(index - 1) // 2)
 
