@@ -57,21 +57,19 @@ class BinarySearchTree:
     # Call the function `cb` on the value of each node
     # You may use a recursive or iterative approach
     def for_each(self, cb):
-        def rec_childs(node,left,right):
+
+        def rec_childs(node):
             if node is None:
-                return False
+                return
 
             if node.left is not None:
-                rec_childs(left,left.left,left.right)
+                rec_childs(node.left)
             if node.right is not None:
-                rec_childs(right,right.left,right.right)
+                rec_childs(node.right)
 
             return cb(node.value)
 
-            if not left and not right:
-                return None
-
-        rec_childs(self,self.left,self.right)
+        rec_childs(self)
 
 
     # DAY 2 Project -----------------------
@@ -165,15 +163,3 @@ class BinarySearchTree:
             print(node.value)
 
         return dft_rec(node)
-
-
-bst = BinarySearchTree(1)
-bst.insert(8)
-bst.insert(5)
-bst.insert(7)
-bst.insert(6)
-bst.insert(3)
-bst.insert(4)
-bst.insert(2)
-
-bst.post_order_dft(bst)
