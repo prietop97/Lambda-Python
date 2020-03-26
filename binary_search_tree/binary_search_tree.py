@@ -34,20 +34,14 @@ class BinarySearchTree:
                 self.left.insert(value)
             else:
                 self.left = node
-                return
         elif self.value <= value:
             if self.right:
                 self.right.insert(value)
             else:
                 self.right = node
-                return
 
 
         
-
-
-
-
     # Return True if the tree contains the value
     # False if it does not
     def contains(self, target):
@@ -96,6 +90,20 @@ class BinarySearchTree:
             self.right.for_each(cb)
 
         return cb(self.value)
+        queue = Queue()
+        queue.enqueue(node)
+        # current = self
+        # queue = Queue()
+        # queue.enqueue(current)
+
+        # while queue.len() > 0:
+        #     current = queue.dequeue()
+        #     cb(current.value)
+        #     if current.left:
+        #         queue.enqueue(current.left)
+        #     if current.right:
+        #         queue.enqueue(current.right)
+
 
 
 
@@ -145,18 +153,18 @@ class BinarySearchTree:
                 queue.enqueue(current.right)
             
 
-        # def bft_rec(queue):
-        #     if queue.len() <= 0:
-        #         return
-        #     current = queue.dequeue()
-        #     print(current.value)
-        #     if current.left is not None:
-        #         queue.enqueue(current.left)
-        #     if current.right is not None:
-        #         queue.enqueue(current.right)
-        #     return bft_rec(queue)
+        def bft_rec(queue):
+            if queue.len() <= 0:
+                return
+            current = queue.dequeue()
+            print(current.value)
+            if current.left is not None:
+                queue.enqueue(current.left)
+            if current.right is not None:
+                queue.enqueue(current.right)
+            return bft_rec(queue)
             
-        # bft_rec(queue)
+        bft_rec(queue)
 
 
     # Print the value of every node, starting with the given node,
