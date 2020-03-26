@@ -40,7 +40,23 @@ class AVLTree:
     in the tree
     """
     def update_height(self):
-        pass
+        
+        def rec_highest_subtree(current_node,left = -1,right = -1):
+            if current_node is None:
+                return 0
+            print(current_node)
+            if current_node.left is not None:
+                left = rec_highest_subtree(current_node.left, left, right)
+
+            if current_node.right is not None:
+                right = rec_highest_subtree(current_node.right, left, right) 
+
+            return 1 + max(left,right)
+            
+
+        height = rec_highest_subtree(self.node)
+        self.height = height
+
 
     """
     Updates the balance factor on the AVLTree class
@@ -54,7 +70,9 @@ class AVLTree:
     of the new parent. 
     """
     def left_rotate(self):
-        pass
+        parent = self.node
+        self.node = self.node.right
+        self.node.left = parent
 
     """
     Perform a right rotation, making the left child of this
@@ -62,7 +80,9 @@ class AVLTree:
     of the new parent. 
     """
     def right_rotate(self):
-        pass
+        parent = self.node
+        self.node = self.node.left
+        self.node.right = parent
 
     """
     Sets in motion the rebalancing logic to ensure the
@@ -78,4 +98,17 @@ class AVLTree:
     if we need to rebalance
     """
     def insert(self, key):
-        pass
+        current = self.node
+        node = Node(key)
+        while current:
+            if current.key >= key and current.left:
+                current = current.left
+            elif current.key >= key and current.left is None:
+                current.left = node
+            elif current.key < key and current.right:
+                current = current.right
+            elif current.key < key and current.right is None:
+                current.right = node
+
+        
+        
