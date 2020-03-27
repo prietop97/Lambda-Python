@@ -12,11 +12,39 @@ f.close()
 
 duplicates = []  # Return the list of duplicates in this data structure
 
-# Replace the nested for loops below with your improvements
+
+# names_1.sort()
+# Replace the nested for loops below with your improvements o(n^2)
+# for name_1 in names_1:
+#     for name_2 in names_2:
+#         if name_1 == name_2:
+#             duplicates.append(name_1)
+
+names_2.sort()
 for name_1 in names_1:
-    for name_2 in names_2:
-        if name_1 == name_2:
+    high = len(names_2) - 1
+    low = 0
+    mid = (low + high) // 2
+    
+    while low <= high:
+        mid = (low + high) // 2
+        if names_2[mid] == name_1:
             duplicates.append(name_1)
+            break
+        elif names_2[mid] > name_1:
+            high = mid - 1
+        elif names_2[mid] < name_1:
+            low = mid + 1
+        else:
+            break
+    
+# my_hash = {}
+# for name_1 in names_1:
+#     my_hash[name_1] = True
+
+# for name_2 in names_2:
+#     if my_hash.get(name_2):
+#         duplicates.append(name_2)
 
 end_time = time.time()
 print (f"{len(duplicates)} duplicates:\n\n{', '.join(duplicates)}\n\n")
