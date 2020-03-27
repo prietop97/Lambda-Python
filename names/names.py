@@ -13,15 +13,18 @@ f.close()
 duplicates = []  # Return the list of duplicates in this data structure
 
 
-# Replace the nested for loops below with your improvements o(n^2)
+# Replace the nested for loops below with your improvements o(n + k)
 # for name_1 in names_1:
 #     for name_2 in names_2:
 #         if name_1 == name_2:
 #             duplicates.append(name_1)
 
 # ? stretch ? #
-names_2.sort()
-for name_1 in names_1:
+
+# o(n log(k))
+names_2.sort() # o(k log(k))
+
+for name_1 in names_1: # o(n log(k))
     high = len(names_2) - 1
     low = 0
     mid = (low + high) // 2
