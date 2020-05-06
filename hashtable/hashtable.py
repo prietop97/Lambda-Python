@@ -60,9 +60,6 @@ class HashTable:
 
         Implement this.
         """
-        self.length += 1
-        if self.length / self.capacity > 0.8:
-            self.resize(self.capacity * 2) 
         hashed = self.hash_index(key)
         entry = HashTableEntry(key,value)
         if self.storage[hashed] is None:
@@ -81,6 +78,10 @@ class HashTable:
                 
 
             prev.next = entry
+        
+        self.length += 1
+        if self.length / self.capacity >= 0.8:
+            self.resize(self.capacity * 2) 
 
 
     def delete(self, key):
@@ -119,15 +120,13 @@ class HashTable:
         old_storage = self.storage
         self.capacity = v
         self.storage = [None] * self.capacity
-
+        self.length = 0
         for nodes in old_storage:
             current = nodes
             while current:
                 self.put(current.key,current.value)
                 current = current.next
         
-        
-
         
 
 if __name__ == "__main__":
