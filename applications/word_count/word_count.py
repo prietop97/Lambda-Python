@@ -1,5 +1,22 @@
 def word_count(s):
-    # Implement me.
+    my_word = s
+    
+    my_hash = {}
+    exep = ['"', ":", ";", ",", ".", "-", "+", "=", "/", "\\", "|", "[", "]", "{", "}", "(", ")", "*", "^", "&"]
+    for char in s:
+        if char in exep:
+            my_word = my_word.replace(char,"")
+    words = my_word.split()
+    for word in words:
+        modified_word = word.lower()
+    
+        if modified_word in my_hash:
+            my_hash[modified_word] += 1
+        else:
+            my_hash[modified_word] = 1
+
+    return my_hash
+
 
 
 if __name__ == "__main__":

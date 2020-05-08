@@ -1,5 +1,24 @@
 def no_dups(s):
-    # Implement me.
+    s_arr = s.split()
+    my_hash = {}
+    returning = []
+    returning_s = ""
+    for word in s_arr:
+        if word not in my_hash:
+            returning.append(word)
+            my_hash[word] = True
+
+    for i in range(len(returning)):
+        if len(returning) - 1 == i:
+            returning_s += returning[i]
+        else:
+            returning_s += returning[i] + " "
+
+    return returning_s
+
+    
+
+
 
 
 if __name__ == "__main__":

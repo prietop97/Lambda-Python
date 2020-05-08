@@ -11,4 +11,7 @@ q = (1, 3, 4, 7, 12)
 def f(x):
     return x * 4 + 6
 
-# TODO: Implement me.
+cache = {}
+def get_per(tuplee):
+    for num in tuplee:
+        cache[num] = f(num)
