@@ -16,6 +16,16 @@ class HashTable:
 
     Implement this.
     """
+    def __init__(self,capacity):
+        self.capacity = capacity
+        self.storage = [None] * self.capacity
+        self.length = 0
+        self.load_factor = self.length / self.capacity
+        self.minimum = 8
+
+    def __len__(self):
+        return self.length
+
 
     def fnv1(self, key):
         """
@@ -25,11 +35,14 @@ class HashTable:
         """
 
     def djb2(self, key):
-        """
-        DJB2 32-bit hash function
+        h = 3313  # arbitrary large prime number to initialize
 
-        Implement this, and/or FNV-1.
-        """
+        for char in key:
+        # hash(i) = hash(i-1) * 33 + str[i]
+            h = ((h << 5) + h) + ord(char)
+
+    #return int(long(h)%long(size))  # python 2.7 needs some overflow magic
+        return h
 
     def hash_index(self, key):
         """
@@ -47,32 +60,74 @@ class HashTable:
 
         Implement this.
         """
+        hashed = self.hash_index(key)
+        entry = HashTableEntry(key,value)
+        if self.storage[hashed] is None:
+            self.storage[hashed] = entry
+        else:
+            current = self.storage[hashed]
+            prev = self.storage[hashed]
+
+            while current:
+                if current.key == key:
+                    current.value = value
+                    return
+
+                prev = current
+                current = current.next
+                
+
+            prev.next = entry
+        
+        self.length += 1
+        if self.length / self.capacity >= 0.8:
+            self.resize(self.capacity * 2) 
+
 
     def delete(self, key):
-        """
-        Remove the value stored with the given key.
+        
+        deleted = False
+        hashed = self.hash_index(key)
+        current = self.storage[hashed]
+        if current.key == key:
+            self.storage[hashed] = current.next
+            deleted = True
+        else:
+            while current.next:
+                if current.next.key == key:
+                    current.next = current.next.next
+                    deleted = True
+                    break
+                current = current.next
+        
+        if deleted:
+            self.length -= 1
+            if self.length / self.capacity < 0.2 and self.capacity // 2 > self.minimum:
+                self.resize(self.capacity // 2)  
 
-        Print a warning if the key is not found.
-
-        Implement this.
-        """
+        
 
     def get(self, key):
-        """
-        Retrieve the value stored with the given key.
+        hashed = self.hash_index(key)
+        current = self.storage[hashed]
+        while current:
+            if current.key == key:
+                return current.value
+            current = current.next
+        return None
 
-        Returns None if the key is not found.
-
-        Implement this.
-        """
-
-    def resize(self):
-        """
-        Doubles the capacity of the hash table and
-        rehash all key/value pairs.
-
-        Implement this.
-        """
+    def resize(self,v):
+        old_storage = self.storage
+        self.capacity = v
+        self.storage = [None] * self.capacity
+        self.length = 0
+        for nodes in old_storage:
+            current = nodes
+            while current:
+                self.put(current.key,current.value)
+                current = current.next
+        
+        
 
 if __name__ == "__main__":
     ht = HashTable(2)

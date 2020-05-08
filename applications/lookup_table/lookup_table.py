@@ -1,12 +1,17 @@
 import math
 import random
 
+look_up_table = {}
 def slowfun(x, y):
     # TODO: Modify to produce the same results, but much faster
-    v = math.pow(x, y)
-    v = math.factorial(v)
-    v //= (x + y)
-    v %= 982451653
+    if (x,y) in look_up_table:
+        return look_up_table[(x,y)]
+    else:
+        v = math.pow(x, y)
+        v = math.factorial(v)
+        v //= (x + y)
+        v %= 982451653
+        look_up_table[(x,y)] = v
 
     return v
 
