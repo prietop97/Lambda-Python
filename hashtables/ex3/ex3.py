@@ -3,19 +3,29 @@ def intersection(arrays):
     my_hash = {}
     result = []
 
-    for i in range(len(arrays)):
-        for j in range(len(arrays[i])):
-            if arrays[i][j] in my_hash:
-                my_hash[arrays[i][j]] += 1
-            else:
-                my_hash[arrays[i][j]] = 1
+    # for i in range(len(arrays)):
+    #     for j in range(len(arrays[i])):
+    #         if arrays[i][j] in my_hash:
+    #             my_hash[arrays[i][j]] += 1
+    #         else:
+    #             my_hash[arrays[i][j]] = 1
 
     
-    for key,value in my_hash.items():
-        if value == len(arrays):
-            result.append(key)
+    # for key,value in my_hash.items():
+    #     if value == len(arrays):
+    #         result.append(key)
 
-    return result
+    for num in arrays[0]:
+        my_hash[num] = True
+
+    for i in range(1,len(arrays)):
+        new_hash = {}
+        for num in arrays[i]:
+            if num in my_hash:
+                new_hash[num] = True
+        my_hash = new_hash
+
+    return list(my_hash)
 
 
 if __name__ == "__main__":
