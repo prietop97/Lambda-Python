@@ -1,8 +1,19 @@
 def intersection(arrays):
 
-    """
-    YOUR CODE HERE
-    """
+    my_hash = {}
+    result = []
+
+    for i in range(len(arrays)):
+        for j in range(len(arrays[i])):
+            if arrays[i][j] in my_hash:
+                my_hash[arrays[i][j]] += 1
+            else:
+                my_hash[arrays[i][j]] = 1
+
+    
+    for key,value in my_hash.items():
+        if value == len(arrays):
+            result.append(key)
 
     return result
 

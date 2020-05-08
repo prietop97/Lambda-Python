@@ -17,6 +17,7 @@ class TestEx2(unittest.TestCase):
             [1],
             [1],
         ])
+        print(result)
         self.assertTrue(result == [1])
 
         result = intersection([
@@ -31,6 +32,7 @@ class TestEx2(unittest.TestCase):
             [1,6,7,3]
         ])
         result.sort()
+        print(result)
         self.assertTrue(result == [1,3])
 
     def test_large(self):

@@ -1,9 +1,12 @@
 def has_negatives(a):
-
-    """
-    YOUR CODE HERE
-    """
-
+    my_hash = {}
+    result = []
+    for num in a:
+        if num in my_hash:
+            result.append(abs(num))
+        else:
+            my_hash[num * -1] = True
+    
     return result
 
 
