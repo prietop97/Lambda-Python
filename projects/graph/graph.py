@@ -42,9 +42,9 @@ class Graph:
 
             current = q.dequeue()
 
-            if current not in visited:
-                visited.add(current)
-                print(current)
+            
+            visited.add(current)
+            print(current)
 
             for next_v in self.get_neighbors(current):
                 if next_v not in visited:
@@ -80,9 +80,8 @@ class Graph:
         if visited is None:
             visited = set()
         
-        if starting_vertex not in visited:
-            print(starting_vertex)
-            visited.add(starting_vertex)
+        print(starting_vertex)
+        visited.add(starting_vertex)
         
         for next_v in self.get_neighbors(starting_vertex):
             if next_v not in visited:
@@ -159,20 +158,10 @@ class Graph:
         for next_v in self.get_neighbors(starting_vertex):
             if next_v not in visited:
                 new_path = self.dfs_recursive(next_v,destination_vertex,path.copy(),visited)
-            if next_v is destination_vertex:
-                return self.dfs_recursive(next_v,destination_vertex,path.copy(),visited)
-        
-        return new_path
-
-        
-        
-            
-            
-
-        
+                if new_path:
+                    return new_path
         
 
-        
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
