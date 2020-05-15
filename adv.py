@@ -2,6 +2,7 @@ from room import Room
 from player import Player
 from world import World
 from util import Queue,Stack
+from random import shuffle
 
 import random
 from ast import literal_eval
@@ -29,7 +30,7 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
-def bft(player,visited):
+def bft(player,traversal_path,visited):
     q = Queue()
     q.enqueue([(player.current_room,None)])
 
@@ -47,11 +48,6 @@ def bft(player,visited):
         traversal_path.append(path[i][1])
         player.travel(path[i][1])
 
-    
-
-
-    
-
 
 
 def dft(traversal_path,player,world):
@@ -68,6 +64,7 @@ def dft(traversal_path,player,world):
         for path in possible_paths:
             if current.get_room_in_direction(path) not in visited:
                 unvisited.append(path)
+        
         unvisited.sort()
 
         if unvisited:
@@ -76,11 +73,12 @@ def dft(traversal_path,player,world):
             player.travel(next_v)
         else:
             if len(visited) == len(world.rooms):
-                return
-            bft(player,visited)
-
+                break
+            bft(player,traversal_path,visited)
+    
+    return traversal_path
+    
 dft(traversal_path,player,world)
-print(traversal_path)
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
