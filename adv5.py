@@ -15,8 +15,8 @@ world = World()
 # map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
-map_file = "maps/test_loop_fork.txt"
-#map_file = "maps/main_maze.txt"
+#map_file = "maps/test_loop_fork.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -96,14 +96,13 @@ while len(visited) < len(world.rooms):
             unvisited_bridges.append(direction)
 
     if not unvisited_bridges:
-        print("Happening")
+
         utils.bft(player,traversal_path,visited)
     
     connections = connected[player.current_room.id]
     
     for connection in connections:
-        print(connection.id)
-        print(visited)
+  
         if connection not in visited:
             for direction,next_room in neighbors.items():
                 if next_room == connection:
@@ -113,7 +112,7 @@ while len(visited) < len(world.rooms):
 
     
     for direction,next_room in neighbors.items():
-        print(next_room)
+     
         if next_room not in visited:
             player.travel(direction)
             traversal_path.append(direction)
