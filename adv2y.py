@@ -13,18 +13,12 @@ world = World()
 
 
 map_file = "maps/main_maze.txt"
-
-# Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
-#world.load_graph(room_graph)
-
-# Print an ASCII map
+world.load_graph(room_graph)
 world.print_rooms()
+player = Player(world.starting_room)
 
-#player = Player(world.starting_room)
 
-# Fill this out with directions to walk
-# traversal_path = ['n', 'n']
 traversal_path = []
 
 def reverse_direction(direction):
@@ -57,6 +51,7 @@ def get_end_points(player,world):
     return my_hash
 
 my_hash = {}
+
 def get_mother_nodes(room):
     
     visited = set()
@@ -85,18 +80,17 @@ def get_mother_nodes(room):
             s.push(new_path)
 
 
-# dead_end = get_end_points(player,world)
-# for room in dead_end:
-#     path = get_mother_nodes(room)
-#     last = path[-1][0]
-#     if last in my_hash:
-#         my_hash[last].append(path)
-#     else:
-#         my_hash[last] = []
-#         my_hash[last].append(path)
 
 
-
+dead_end = get_end_points(player,world)
+for room in dead_end:
+    path = get_mother_nodes(room)
+    last = path[-1][0]
+    if last in my_hash:
+        my_hash[last].append(path)
+    else:
+        my_hash[last] = []
+        my_hash[last].append(path)
 
 def travel_dead_ends(player,room,visited,traversal_paths):
     if room in my_hash:
@@ -135,8 +129,8 @@ def travel_maze(player,world,traversal_path):
     while len(visited) != len(world.rooms):
         current = player.current_room
         unvisited = []
+        travel_dead_ends(player,player.current_room,visited,traversal_path)
         visited.add(current)
-        travel_dead_ends(player,current,visited,traversal_path)
         possible_paths = utils.get_neighbors(player.current_room)
         end_loops = []  
         others = []      
@@ -160,8 +154,7 @@ def travel_maze(player,world,traversal_path):
                     if total == 0:
                         end_loops.append([room,direction])
             
-            if end_loops:
-                shuffle(end_loops)
+            if end_loops:                    
                 player.travel(end_loops[-1][1])
                 traversal_path.append(end_loops[-1][1])
                 visited.add(end_loops[-1][0])
@@ -178,27 +171,9 @@ def travel_maze(player,world,traversal_path):
 
 
 
-# travel_maze(player,world,traversal_path[:])
-best = [0] * 1000
-for i in range(2):
-    w = World()
-    w.load_graph(room_graph)
-    p = Player(w.starting_room)
-    dead_end = get_end_points(p,w)
-    for room in dead_end:
-        path = get_mother_nodes(room)
-        last = path[-1][0]
-        if last in my_hash:
-            my_hash[last].append(path)
-        else:
-            my_hash[last] = []
-            my_hash[last].append(path)
-    traversal = travel_maze(p,w,[])
-    if len(traversal) < len(best):
-        best = traversal[:]
 
-print(best)
-print(len(best))
+travel_maze(player,world,traversal_path)
+
 
 
 
@@ -213,32 +188,30 @@ print(len(best))
 
 
 # TRAVERSAL TEST - DO NOT MODIFY
-# visited_rooms = set()
-# player.current_room = world.starting_room
-# visited_rooms.add(player.current_room)
+visited_rooms = set()
+player.current_room = world.starting_room
+visited_rooms.add(player.current_room)
 
     
 
-# print(player.current_room.id)
-# for move in traversal_path:
-#     player.travel(move)
-#     visited_rooms.add(player.current_room)
-#     print(player.current_room.id)
+for move in traversal_path:
+    player.travel(move)
+    visited_rooms.add(player.current_room)
+    # print(p.current_room.id)
 
-# print(traversal_path)
 
-# if len(visited_rooms) == len(room_graph):
-#     print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
-# else:
-#     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
-#     #print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-#     print(f"{len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+if len(visited_rooms) == len(room_graph):
+    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+else:
+    print("TESTS FAILED: INCOMPLETE TRAVERSAL")
+    #print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
+    print(f"{len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
 
 
 
-# #######
-# # UNCOMMENT TO WALK AROUND
-# #######
+#######
+# UNCOMMENT TO WALK AROUND
+#######
 # player.current_room.print_room_description(player)
 # while True:
 #     cmds = input("-> ").lower().split(" ")
