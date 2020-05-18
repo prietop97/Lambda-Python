@@ -90,13 +90,13 @@ def get_island_entrance(starting,ending,exce):
         neighbors = get_neighbors(current,exce)
 
         if current == ending:
-            return False
+            return True
 
         for direction,room in neighbors.items():
             if room not in visited:
                 q.enqueue(room)
     
-    return True
+    return False
         
 
 
@@ -199,7 +199,8 @@ def bft(destination):
         if current == destination:
             break
         neighbors = get_neighbors(current)
-        for direction,next_room in neighbors.items():
+        neighbors = list(neighbors).sort(reverse=True)
+        for direction,next_room in neighbors:
             if next_room not in newly_visited:
                 new_path = path + [(next_room,direction)]
                 q.enqueue(new_path)
@@ -246,3 +247,86 @@ def go_through_connections(player,connected,visited,traversal_path,world):
 def fully_visited(visited,world):
     if len(visited) >= len(world.rooms):
         return True
+def travel_dead_ends(room,my_hash,visited,traversal_path,player):
+    if room.id in my_hash:
+        for paths in my_hash[room.id]:
+            if paths[0][0] not in visited:
+                reverse = []
+                normal = []
+                for i in range(len(paths) - 1,-1,-1):
+                    path = paths[i]
+                    direction = path[1]
+                    if direction:
+                        reverse_path = reverse_direction(direction)
+                        reverse.append(reverse_path)
+                        normal.append(direction)
+                    
+                normal.reverse()
+                for path in reverse:
+                    player.travel(path)
+                    traversal_path.append(path)
+                    visited.add(player.current_room)
+
+                for path in normal:
+                    player.travel(path)
+                    traversal_path.append(path)
+                    visited.add(player.current_room)
+
+        my_hash.pop(room.id)
+
+def dft(player,traversal_path,visited,last_room,last_direction):
+    
+    s = Stack()
+    s.push([(player.current_room,None)])
+
+    while s.size() > 0:
+        path = s.pop()
+        room = path[-1][0]
+        visited.add(room)
+        neighbors = get_neighbors(room)
+        if path[-1][1] and path[-1][0] == last_room:
+            break
+
+        for direction,next_room in neighbors.items():
+            if next_room not in visited:
+                new_path = path + [(next_room,direction)]
+                s.push(new_path)
+    
+
+    path.pop(0) 
+    for travel in path:
+        player.travel(travel[1])
+        traversal_path.append(travel[1])
+
+ 
+
+
+
+
+def bft(player,traversal_path,visited):
+    q = Queue()
+    q.enqueue([(player.current_room,None)])
+    currently_visited = set()
+    while q.size() > 0:
+
+        path = q.dequeue()
+        current = path[-1][0]
+        currently_visited.add(current)
+  
+        if current not in visited:
+            break
+        else:
+            exits = current.get_exits()
+            exits.sort(reverse=True)
+            for next_v in exits:
+                if current.get_room_in_direction(next_v) not in currently_visited:
+                    new_path = path + [(current.get_room_in_direction(next_v),next_v)]
+                    q.enqueue(new_path)
+    
+    if len(visited) == 500:
+        return
+    for i in range(1,len(path)):
+        traversal_path.append(path[i][1])
+        player.travel(path[i][1])
+
+

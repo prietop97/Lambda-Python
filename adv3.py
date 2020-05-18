@@ -94,11 +94,6 @@ dead_end = get_end_points(player,world)
 for room in dead_end:
     path = get_mother_nodes(room)
     last = path[-1][0]
-    
-    all_ignores.add(last)
-    all_ignores.add(room)
-    for vertice in path:
-        all_ignores.add(vertice[0])
     if last in my_hash:
         my_hash[last].append(path)
     else:
