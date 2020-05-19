@@ -121,16 +121,35 @@ def travel_dead_ends(player,room,visited,traversal_paths):
                     traversal_path.append(path)
                     visited.add(player.current_room)
 
-                
+def bft(starting_room,exce):
+    visited = set()
+    q = Queue()
+    q.enqueue([starting_room])
+    paths = []
+    while q.size() > 0:
+        path = q.dequeue()
+        current = path[-1]
+        paths.append(path)
+        possible_paths = utils.get_neighbors(current)
+        for direction,room in possible_paths.items():
+            if room not in path and room != exce:
+                new_path = path + [room]
+                q.enqueue(new_path)
+            
+    paths.sort(key=len)
+    return len(paths[-1])
 
+# bft(world.rooms[108],world.rooms[81])
+# bft(world.rooms[137],world.rooms[81])
+                
 def travel_maze(player,world,traversal_path):
     visited = set()
     cache = {}
     while len(visited) != len(world.rooms):
         current = player.current_room
         unvisited = []
-        travel_dead_ends(player,player.current_room,visited,traversal_path)
         visited.add(current)
+        travel_dead_ends(player,player.current_room,visited,traversal_path)
         possible_paths = utils.get_neighbors(player.current_room)
         end_loops = []  
         others = []      
@@ -150,14 +169,22 @@ def travel_maze(player,world,traversal_path):
                             if check:
                                 total += 1
                                 others.append([room,direction])
-                                continue
                     if total == 0:
                         end_loops.append([room,direction])
             
-            if end_loops:                    
-                player.travel(end_loops[-1][1])
-                traversal_path.append(end_loops[-1][1])
-                visited.add(end_loops[-1][0])
+            if end_loops:
+                best_direction = None
+                best = None
+                length_of_best = float('inf')
+                for room,direction in end_loops:
+                    now = bft(room,player.current_room)
+                    if now < length_of_best:
+                        length_of_best = now
+                        best = room
+                        best_direction = direction
+                player.travel(best_direction)
+                traversal_path.append(best_direction)
+                visited.add(best)
             elif others:
                 player.travel(others[0][1])
                 traversal_path.append(others[0][1])
@@ -197,7 +224,7 @@ visited_rooms.add(player.current_room)
 for move in traversal_path:
     player.travel(move)
     visited_rooms.add(player.current_room)
-    # print(p.current_room.id)
+    print(player.current_room.id)
 
 
 if len(visited_rooms) == len(room_graph):
