@@ -65,6 +65,7 @@ class CPU:
         """Run the CPU."""
         running = True
         IR = self.ram_read(self.pc)
+        SP = 7
 
         while running:
             if IR == 0b00000001:
@@ -84,15 +85,23 @@ class CPU:
 
             elif IR == 0b10100010:
                 print("HEY")
-                ammount = self.reg[self.ram_read(self.pc + 2)] // 2
-                new = self.reg[self.ram_read(self.pc + 1)] << ammount
-                print(self.reg[self.ram_read(self.pc + 1)])
-                print(self.reg[self.ram_read(self.pc + 2)])
-                print(new)
-                self.reg[self.ram_read(self.pc + 1,)] = new
+                # ammount = self.reg[self.ram_read(self.pc + 2)] // 2
+                # new = self.reg[self.ram_read(self.pc + 1)] << ammount
+                # print(self.reg[self.ram_read(self.pc + 1)])
+                # print(self.reg[self.ram_read(self.pc + 2)])
+                # print(new)
+                self.reg[self.ram_read(self.pc + 1)] = self.reg[self.ram_read(self.pc + 2)] * self.reg[self.ram_read(self.pc + 1)]
                 self.pc += 3
                 IR = self.ram_read(self.pc)
-
+            elif IR == 0b01000101:
+                SP -= 1
+                self.reg[SP] = self.ram_read(self.pc + 1)
+                print("HAPPENING")
+                self.pc += 2
+            # elif IR == 0b01000110:
+            #     self.ram_write(self.pc + 1,self.reg[SP])
+            #     SP += 1
+            #     self.pc += 2
             else:
                 print("QUITTING DUE TO ERROR")
                 self.pc = 0
