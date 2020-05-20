@@ -11,26 +11,18 @@ class CPU:
         self.reg = [0] * 8
         self.pc = 0 
 
-    def load(self):
+    def load(self,program):
         """Load a program into memory."""
 
         address = 0
 
-        # For now, we've just hardcoded a program:
+        with open(program) as f:
+            for direction in f:
+                trimmed = direction.split("#")[0].strip()
+                if trimmed:
+                    self.ram[address] = int(trimmed,2)
+                    address += 1
 
-        program = [
-            # From print8.ls8
-            0b10000010, # LDI R0,8
-            0b00000000,
-            0b00001000,
-            0b01000111, # PRN R0
-            0b00000000,
-            0b00000001, # HLT
-        ]
-
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
 
 
     def alu(self, op, reg_a, reg_b):
@@ -89,6 +81,23 @@ class CPU:
                 print(self.reg[self.ram_read(self.pc + 1)])
                 self.pc += 2
                 IR = self.ram_read(self.pc)
+
+            elif IR == 0b10100010:
+                print("HEY")
+                ammount = self.reg[self.ram_read(self.pc + 2)] // 2
+                new = self.reg[self.ram_read(self.pc + 1)] << ammount
+                print(self.reg[self.ram_read(self.pc + 1)])
+                print(self.reg[self.ram_read(self.pc + 2)])
+                print(new)
+                self.reg[self.ram_read(self.pc + 1,)] = new
+                self.pc += 3
+                IR = self.ram_read(self.pc)
+
+            else:
+                print("QUITTING DUE TO ERROR")
+                self.pc = 0
+                running = False
+
             
 
         
