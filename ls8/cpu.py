@@ -70,35 +70,50 @@ class CPU:
         while running:
             if IR == 0b00000001:
                 print("Quitting")
+
                 self.pc = 0
                 running = False
 
-            elif IR == 0b10000010:
+            elif IR == 0b10000010: ##LDI
                 self.reg[self.ram_read(self.pc + 1)] = self.ram_read(self.pc + 2)
                 self.pc += 3
                 IR = self.ram_read(self.pc)
             
-            elif IR == 0b01000111:
+            elif IR == 0b01000111: ##PRINT
                 print(self.reg[self.ram_read(self.pc + 1)])
                 self.pc += 2
                 IR = self.ram_read(self.pc)
 
-            elif IR == 0b10100010:
+            elif IR == 0b10100010: ##MULT
                 self.reg[self.ram_read(self.pc + 1)] = self.reg[self.ram_read(self.pc + 2)] * self.reg[self.ram_read(self.pc + 1)]
                 self.pc += 3
                 IR = self.ram_read(self.pc)
-            elif IR == 0b01000101:
+            elif IR == 0b01000101: ##PUSH
                 SP -= 1
                 self.reg[SP] = self.reg[self.ram_read(self.pc + 1)]
                 self.pc += 2
                 IR = self.ram_read(self.pc)
-            elif IR == 0b01000110:
+            elif IR == 0b01000110: ##POP
                 self.reg[self.ram_read(self.pc + 1)] = self.reg[SP]
                 SP += 1
                 self.pc += 2
                 IR = self.ram_read(self.pc)
+            elif IR == 0b01010000: ##CALL
+                next_pc = self.pc + 2
+                SP -= 1
+                self.reg[SP] = next_pc
+                self.pc = self.reg[self.ram_read(self.pc + 1)]
+                IR = self.ram_read(self.pc)
+            elif IR == 0b00010001: ##RET
+                self.pc = self.reg[SP]
+                SP += 1
+                IR = self.ram_read(self.pc)
+            elif IR == 0b10100000: ##ADD
+                self.reg[self.ram_read(self.pc + 1)] += self.reg[self.ram_read(self.pc + 2)]
+                self.pc += 3
+                IR = self.ram_read(self.pc)
             else:
-                print("QUITTING DUE TO ERROR")
+                print(f"QUITTING DUE TO ERROR ON CALL {IR}")
                 self.pc = 0
                 running = False
 
