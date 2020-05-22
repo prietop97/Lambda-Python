@@ -9,7 +9,8 @@ class CPU:
         """Construct a new CPU."""
         self.ram = [0] * 256
         self.reg = [0] * 8
-        self.pc = 0 
+        self.pc = 0
+        self.fl = 0b00000000
 
     def load(self,program):
         """Load a program into memory."""
@@ -23,14 +24,46 @@ class CPU:
                     self.ram[address] = int(trimmed,2)
                     address += 1
 
-
+    def equals(self,reg_a,reg_b):
+        if reg_a ^ reg_b:
+            return False
+        else:
+            return True
+        
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
 
         if op == "ADD":
-            self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+            carry = 0b00000000
+            addition = 0b00000000
+            num_1 = reg_a
+            num_2 = reg_b
+            first = True
+            while carry or first:
+                first = False
+                carry = num_1 & num_2
+                addition = num_1 ^ num_2
+                num_1 = carry << 1
+                num_2 = addition
+            return addition
+        elif op == "SUB":
+            carry = 0b00000000
+            sub = 0b00000000
+            num_1 = reg_a
+            num_2 = reg_b
+            first = True
+            while carry or first:
+                first = False
+                carry = num_1 & num_2
+                sub = num_1 ^ num_2
+                num_1 = carry >> 1
+                num_2 = sub
+            return sub
+        elif op == "MULT":
+            final = 0
+            for i in range(reg_b):
+                final += self.alu("ADD",reg_a,reg_a)
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -68,6 +101,7 @@ class CPU:
         SP = 7
 
         while running:
+            print(self.alu("SUB",0b00000011,0b10000000))
             if IR == 0b00000001:
                 print("Quitting")
 
@@ -109,7 +143,17 @@ class CPU:
                 SP += 1
                 IR = self.ram_read(self.pc)
             elif IR == 0b10100000: ##ADD
-                self.reg[self.ram_read(self.pc + 1)] += self.reg[self.ram_read(self.pc + 2)]
+                
+                self.reg[self.ram_read(self.pc + 1)] = self.alu("ADD",)self.reg[self.ram_read(self.pc + 2)]
+                self.pc += 3
+                IR = self.ram_read(self.pc)
+            elif IR == 0b10100000: ##CMP
+                same = 0b00000001
+                less = 0b00000100
+                more = 0b00000010
+
+
+
                 self.pc += 3
                 IR = self.ram_read(self.pc)
             else:
