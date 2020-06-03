@@ -4,8 +4,8 @@
 class City:
   def __init__(self,name,lat,lon):
     self.name = name
-    self.lat = lat
-    self.lon = lon
+    self.lat = float(lat)
+    self.lon = float(lon)
 
   def __str__(self):
     return f"Name: {self.name}, Lat: {self.lat}, Lon: {self.lon}"
@@ -41,7 +41,7 @@ def cityreader(cities=[]):
 
       ## LOOPS THROUGH THE REST  - SKIPPING THE FIRST_ONE
       for line in csv_reader:
-        cities.append(City(line[name_index],float(line[lat_index]),float(line[lon_index])))
+        cities.append(City(line[name_index],line[lat_index],line[lon_index]))
     return cities
 
 cityreader(cities)
