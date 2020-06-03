@@ -58,7 +58,7 @@ class LinkedList:
         self.head = next_
         self.reverse_list(next_,node)
 
-
+3
         
 
 
