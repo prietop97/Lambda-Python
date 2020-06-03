@@ -27,8 +27,7 @@ class CPU:
     def equals(self,reg_a,reg_b):
         if reg_a ^ reg_b:
             return False
-        else:
-            return True
+        return True
         
 
     def alu(self, op, reg_a, reg_b):
@@ -62,8 +61,9 @@ class CPU:
             return sub
         elif op == "MULT":
             final = 0
-            for i in range(reg_b):
-                final += self.alu("ADD",reg_a,reg_a)
+            for _ in range(reg_b):
+                final = self.alu("ADD",reg_a,final)
+            return final
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -101,7 +101,6 @@ class CPU:
         SP = 7
 
         while running:
-            print(self.alu("SUB",0b00000011,0b10000000))
             if IR == 0b00000001:
                 print("Quitting")
 
@@ -119,7 +118,7 @@ class CPU:
                 IR = self.ram_read(self.pc)
 
             elif IR == 0b10100010: ##MULT
-                self.reg[self.ram_read(self.pc + 1)] = self.reg[self.ram_read(self.pc + 2)] * self.reg[self.ram_read(self.pc + 1)]
+                self.reg[self.ram_read(self.pc + 1)] = self.alu("MULT",self.reg[self.ram_read(self.pc + 1)],self.reg[self.ram_read(self.pc + 2)])
                 self.pc += 3
                 IR = self.ram_read(self.pc)
             elif IR == 0b01000101: ##PUSH
@@ -143,18 +142,64 @@ class CPU:
                 SP += 1
                 IR = self.ram_read(self.pc)
             elif IR == 0b10100000: ##ADD
-                
-                self.reg[self.ram_read(self.pc + 1)] = self.alu("ADD",)self.reg[self.ram_read(self.pc + 2)]
+                self.reg[self.ram_read(self.pc + 1)] = self.alu("ADD",self.reg[self.ram_read(self.pc + 1)],self.reg[self.ram_read(self.pc + 2)])
                 self.pc += 3
                 IR = self.ram_read(self.pc)
-            elif IR == 0b10100000: ##CMP
+            elif IR == 0b10100111: ##CMP
                 same = 0b00000001
                 less = 0b00000100
                 more = 0b00000010
-
-
-
+                
+                if self.equals(self.reg[self.ram_read(self.pc + 1)],self.reg[self.ram_read(self.pc + 2)]):
+                    self.fl = same
+                else:
+                    starting = 0b10000000
+                    counter = 9
+                    left = self.reg[self.ram_read(self.pc + 1)]
+                    right = self.reg[self.ram_read(self.pc + 2)]
+                    while counter:
+                        temp_left = left & starting
+                        temp_right = right & starting
+                        if (self.equals(temp_left,0b00000000) and self.equals(temp_right,0b00000000) or self.equals(temp_left,starting) and self.equals(temp_right,starting)):
+                            counter -= 1
+                            starting >>= 1
+                            continue
+                        if self.equals(temp_left,starting) and self.equals(temp_right,0b00000000):
+                            self.fl = more
+                            break
+                        else:
+                            self.fl = less
+                            break
                 self.pc += 3
+                IR = self.ram_read(self.pc)
+
+            elif IR == 0b01010101: ## JEQ
+                if self.equals(self.fl,0b00000001):
+                    next_pc = self.pc + 2
+                    SP -= 1
+                    self.reg[SP] = next_pc
+                    self.pc = self.reg[self.ram_read(self.pc + 1)]
+                    IR = self.ram_read(self.pc)
+                else:
+                    self.pc += 2
+                    IR = self.ram_read(self.pc)
+
+            elif IR == 0b01010110: ## JNQ
+                if not self.equals(self.fl,0b00000001):
+                    next_pc = self.pc + 2
+                    SP -= 1
+                    self.reg[SP] = next_pc
+                    self.pc = self.reg[self.ram_read(self.pc + 1)]
+                    IR = self.ram_read(self.pc)
+                else:
+                    self.pc += 2
+                    IR = self.ram_read(self.pc)
+
+            elif IR == 0b01010100: ## JMP
+                next_pc = self.pc + 2
+                SP -= 1
+                self.reg[SP] = next_pc
+                self.pc = self.reg[self.ram_read(self.pc + 1)]
                 IR = self.ram_read(self.pc)
             else:
                 print(f"QUITTING DUE TO ERROR ON CALL {IR}")
