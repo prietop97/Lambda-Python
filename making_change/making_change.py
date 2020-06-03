@@ -13,7 +13,7 @@ def making_change(amount, denominations):
 
   return db[amount]
 
-
+print(making_change(5,[1,5]))
   
 
 

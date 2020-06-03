@@ -24,7 +24,7 @@ def rock_paper_scissors(n):
 
     return total
 
-print(rock_paper_scissors(2))
+print(rock_paper_scissors(100))
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
