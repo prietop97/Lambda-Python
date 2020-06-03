@@ -55,12 +55,12 @@ def merge_in_place(arr, start, mid, end):
 
     return arr
 
-# def merge_sort_in_place(arr, l, r): 
-#     # TO-DO
-#     if l == r:
-#         return arr[l]
+def merge_sort_in_place(arr, l, r): 
+    # TO-DO
+    if l == r:
+        return arr[l]
 
-#     m = (r - l) - 1 // 2
+    m = (r - l) - 1 // 2
 
     
 
