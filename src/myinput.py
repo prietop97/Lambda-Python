@@ -26,11 +26,5 @@ class Input:
             return False
         return True
 
-
-    @staticmethod
-    def quit_console(self,option):
-        os.system('clear')
-        print("Goodbye")
-        sys.exit()
     
 
