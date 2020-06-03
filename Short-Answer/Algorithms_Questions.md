@@ -7,10 +7,9 @@ pseudocode with respect to the input size n of each of the following:
 
 ```python
 a)  a = 0
-    while (a < n * n * n):
+    while (a < n * n * n): 
       a = a + n * n
 ```
-
 
 ```
 b)  sum = 0
